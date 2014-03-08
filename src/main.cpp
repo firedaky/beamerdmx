@@ -19,8 +19,12 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+    a.setApplicationName(BEAMERDMX_NAME);
+    a.setApplicationDisplayName(BEAMERDMX_NAME);
+    a.setApplicationVersion(BEAMERDMX_VERSION);
 
     QQuickView mainWindow(QUrl("qrc:/qml/mainwindow.qml"));
+    mainWindow.setTitle(a.applicationDisplayName() + " " + a.applicationVersion());
     mainWindow.show();
 
     a.connect(dynamic_cast<QObject*>(mainWindow.engine()), SIGNAL(quit()), SLOT(quit()));

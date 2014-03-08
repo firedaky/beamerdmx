@@ -11,6 +11,8 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = beamerdmx
 TEMPLATE = app
 
+DEFINES += "BEAMERDMX_NAME=\\\"BeamerDMX\\\""
+DEFINES += "BEAMERDMX_VERSION=\\\"0.0.1\\\""
 
 SOURCES += src/main.cpp
 
