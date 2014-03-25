@@ -31,21 +31,21 @@
  </Channel>
  <Channel Name="Color 1">
   <Group Byte="0">Colour</Group>
-  <Capability Min="0" Max="8">From file</Capability>
-  <Capability Min="9" Max="16">Mix</Capability>
-  <Capability Min="17" Max="24">Red</Capability>
-  <Capability Min="25" Max="32">Amber</Capability>
-  <Capability Min="33" Max="40">Yellow</Capability>
-  <Capability Min="41" Max="48">Light Green</Capability>
-  <Capability Min="49" Max="56">Green</Capability>
-  <Capability Min="57" Max="64">Cyan</Capability>
-  <Capability Min="65" Max="72">Light Blue</Capability>
-  <Capability Min="73" Max="80">Blue</Capability>
-  <Capability Min="81" Max="88">Magenta</Capability>
-  <Capability Min="89" Max="96">Pink</Capability>
-  <Capability Min="97" Max="128">Open</Capability>
-  <Capability Min="129" Max="192">Rainbow Fwd Fast - Slow</Capability>
-  <Capability Min="193" Max="255">Rainbow Bwd Slow - Fast</Capability>
+  <Capability Min="0" Max="7">From file</Capability>
+  <Capability Min="8" Max="15">Mix</Capability>
+  <Capability Min="16" Max="23">Red</Capability>
+  <Capability Min="24" Max="31">Amber</Capability>
+  <Capability Min="32" Max="39">Yellow</Capability>
+  <Capability Min="40" Max="47">Light Green</Capability>
+  <Capability Min="48" Max="55">Green</Capability>
+  <Capability Min="56" Max="63">Cyan</Capability>
+  <Capability Min="64" Max="71">Light Blue</Capability>
+  <Capability Min="72" Max="79">Blue</Capability>
+  <Capability Min="80" Max="87">Magenta</Capability>
+  <Capability Min="88" Max="95">Pink</Capability>
+  <Capability Min="96" Max="127">Open</Capability>
+  <Capability Min="128" Max="191">Rainbow Fwd Fast - Slow</Capability>
+  <Capability Min="192" Max="255">Rainbow Bwd Slow - Fast</Capability>
  </Channel>
  <Channel Name="Red">
   <Group Byte="0">Intensity</Group>
@@ -223,21 +223,21 @@
  </Channel>
  <Channel Name="Color 2">
   <Group Byte="0">Colour</Group>
-  <Capability Min="0" Max="8">From file</Capability>
-  <Capability Min="9" Max="16">Mix</Capability>
-  <Capability Min="17" Max="24">Red</Capability>
-  <Capability Min="25" Max="32">Amber</Capability>
-  <Capability Min="33" Max="40">Yellow</Capability>
-  <Capability Min="41" Max="48">Light Green</Capability>
-  <Capability Min="49" Max="56">Green</Capability>
-  <Capability Min="57" Max="64">Cyan</Capability>
-  <Capability Min="65" Max="72">Light Blue</Capability>
-  <Capability Min="73" Max="80">Blue</Capability>
-  <Capability Min="81" Max="88">Magenta</Capability>
-  <Capability Min="89" Max="96">Pink</Capability>
-  <Capability Min="97" Max="128">Open</Capability>
-  <Capability Min="129" Max="192">Rainbow Fwd Fast - Slow</Capability>
-  <Capability Min="193" Max="255">Rainbow Bwd Slow - Fast</Capability>
+  <Capability Min="0" Max="7">From file</Capability>
+  <Capability Min="8" Max="15">Mix</Capability>
+  <Capability Min="16" Max="23">Red</Capability>
+  <Capability Min="24" Max="31">Amber</Capability>
+  <Capability Min="32" Max="39">Yellow</Capability>
+  <Capability Min="40" Max="47">Light Green</Capability>
+  <Capability Min="48" Max="55">Green</Capability>
+  <Capability Min="56" Max="63">Cyan</Capability>
+  <Capability Min="64" Max="71">Light Blue</Capability>
+  <Capability Min="72" Max="79">Blue</Capability>
+  <Capability Min="80" Max="87">Magenta</Capability>
+  <Capability Min="88" Max="95">Pink</Capability>
+  <Capability Min="96" Max="127">Open</Capability>
+  <Capability Min="128" Max="191">Rainbow Fwd Fast - Slow</Capability>
+  <Capability Min="192" Max="255">Rainbow Bwd Slow - Fast</Capability>
  </Channel>
  <Mode Name="Normal">
   <Physical>
