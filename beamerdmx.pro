@@ -21,7 +21,8 @@ HEADERS  +=
 FORMS    +=
 
 OTHER_FILES += \
-    qml/mainwindow.qml
+    qml/mainwindow.qml \
+    qml/beamerwindow.qml
 
 RESOURCES += \
     beamerdmx.qrc

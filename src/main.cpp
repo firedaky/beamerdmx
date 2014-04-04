@@ -27,6 +27,10 @@ int main(int argc, char *argv[])
     mainWindow.setTitle(a.applicationDisplayName() + " " + a.applicationVersion());
     mainWindow.show();
 
+    QQuickView beamerWindow(QUrl("qrc:/qml/beamerwindow.qml"));
+    beamerWindow.setResizeMode(QQuickView::SizeRootObjectToView);
+    beamerWindow.show();
+
     a.connect(dynamic_cast<QObject*>(mainWindow.engine()), SIGNAL(quit()), SLOT(quit()));
 
     return a.exec();
