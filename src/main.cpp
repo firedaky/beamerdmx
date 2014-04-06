@@ -31,6 +31,7 @@ int main(int argc, char *argv[])
 
     QQuickView mainWindow(QUrl("qrc:/qml/mainwindow.qml"));
     mainWindow.setTitle(a.applicationDisplayName() + " " + a.applicationVersion());
+    mainWindow.setResizeMode(QQuickView::SizeRootObjectToView);
     mainWindow.show();
 
     QQuickView beamerWindow(QUrl("qrc:/qml/beamerwindow.qml"));

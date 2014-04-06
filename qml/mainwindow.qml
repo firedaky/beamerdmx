@@ -13,37 +13,44 @@
 //   limitations under the License.
 
 import QtQuick 2.0
+import QtQuick.Controls 1.1
 
 Rectangle {
     id: page
-    width: 320; height: 480
+    width: 800; height: 600
     color: "lightgray"
 
-    Text {
-        id: helloText
-        text: "Hello world!"
-        y: 30
-        anchors.horizontalCenter: page.horizontalCenter
-        font.pointSize: 24; font.bold: true
+    Rectangle {
+        id: channelView
+
+        anchors.margins: 5
+        anchors.left: parent.left
+        anchors.top: parent.top
+        anchors.right: parent.right
+        anchors.bottom: buttons.top
+
+        color: "gray"
     }
 
     Rectangle {
-        id: quitButton
-        width: quitText.paintedWidth + 20
-        height: quitText.paintedHeight + 20
+        id: buttons
 
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.bottomMargin: 20
+        height: 150
+
+        anchors.margins: 5
+        anchors.left: parent.left
+        anchors.right: parent.right
         anchors.bottom: parent.bottom
 
-        Text {
-            id: quitText
-            text: "Quit"
-            anchors.centerIn: parent
-        }
+        color: "darkgray"
 
-        MouseArea {
-            anchors.fill: parent
+        Button {
+            anchors.margins: 5
+            anchors.bottom: parent.bottom
+            anchors.right: parent.right
+
+            text: "Quit"
+
             onClicked: {
                 Qt.quit();
             }
