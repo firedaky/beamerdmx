@@ -13,9 +13,11 @@
 //   limitations under the License.
 
 #include <QApplication>
+#include <QDebug>
 #include <QQuickView>
 #include <QQmlEngine>
 
+#include "lasercontroller.h"
 #include "lasersurface.h"
 
 int main(int argc, char *argv[])
@@ -34,6 +36,20 @@ int main(int argc, char *argv[])
     QQuickView beamerWindow(QUrl("qrc:/qml/beamerwindow.qml"));
     beamerWindow.setResizeMode(QQuickView::SizeRootObjectToView);
     beamerWindow.show();
+
+    LaserSurface* surface = beamerWindow.rootObject()->findChild<LaserSurface*>("LaserSurface");
+    if (!surface)
+    {
+        qCritical() << "Could not find laser surface";
+        return -1;
+    }
+
+    LaserController controller;
+    if (!controller.initialize(surface))
+    {
+        qCritical() << "Could not initialize laser controller";
+        return -1;
+    }
 
     a.connect(dynamic_cast<QObject*>(mainWindow.engine()), SIGNAL(quit()), SLOT(quit()));
 

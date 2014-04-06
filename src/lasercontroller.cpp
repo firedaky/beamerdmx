@@ -12,35 +12,43 @@
 //   See the License for the specific language governing permissions and
 //   limitations under the License.
 
-#include <QPainter>
+#include <QDebug>
 
-#include "laserpainter.h"
+#include "channels.h"
+#include "colors.h"
+
 #include "lasersurface.h"
+#include "laserpainter.h"
+#include "lasercontroller.h"
 
-LaserSurface::LaserSurface(QQuickItem *parent) :
-    QQuickPaintedItem(parent),
-    laserPainter(nullptr)
+LaserController::LaserController(QObject *parent) :
+    QObject(parent),
+    laserSurface(nullptr),
+    blackoutPainter(nullptr)
 {
 }
 
-void LaserSurface::paint(QPainter *painter)
+LaserController::~LaserController()
 {
-    if (laserPainter)
+    if (laserSurface)
     {
-        laserPainter->paint(painter, contentsBoundingRect());
-    }
-    else
-    {
-#ifdef DEBUG
-        // In debug builds, we warn about an unset laser painter by turning the screen magenta.
-        painter->fillRect(contentsBoundingRect(), Qt::magenta);
-#else
-        painter->fillRect(contentsBoundingRect(), Qt::black);
-#endif
+        laserSurface->setLaserPainter(nullptr);
     }
 }
 
-void LaserSurface::setLaserPainter(LaserPainter *newPainter)
+bool LaserController::initialize(LaserSurface *surface)
 {
-    laserPainter = newPainter;
+    if (!surface)
+    {
+        qCritical() << "Invalid LaserSurface";
+        return false;
+    }
+
+    laserSurface = surface;
+
+    blackoutPainter = new LaserPainter(this);
+
+    laserSurface->setLaserPainter(blackoutPainter);
+
+    return true;
 }

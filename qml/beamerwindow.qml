@@ -22,5 +22,7 @@ Rectangle {
 
     LaserSurface {
         anchors.fill: parent
+
+        objectName: "LaserSurface"
     }
 }

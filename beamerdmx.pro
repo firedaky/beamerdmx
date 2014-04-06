@@ -18,12 +18,16 @@ DEFINES += "BEAMERDMX_VERSION=\\\"0.0.1\\\""
 
 SOURCES += src/main.cpp \
     src/lasersurface.cpp \
-    src/colors.cpp
+    src/colors.cpp \
+    src/lasercontroller.cpp \
+    src/laserpainter.cpp
 
 HEADERS  += \
     src/lasersurface.h \
     src/channels.h \
-    src/colors.h
+    src/colors.h \
+    src/lasercontroller.h \
+    src/laserpainter.h
 
 FORMS    +=
 
