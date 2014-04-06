@@ -20,7 +20,8 @@ SOURCES += src/main.cpp \
     src/lasersurface.cpp
 
 HEADERS  += \
-    src/lasersurface.h
+    src/lasersurface.h \
+    src/channels.h
 
 FORMS    +=
 
