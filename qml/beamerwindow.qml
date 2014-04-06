@@ -13,9 +13,14 @@
 //   limitations under the License.
 
 import QtQuick 2.0
+import BeamerDMX 1.0
 
 Rectangle {
     width: 640
     height: 480
     color: "black"
+
+    LaserSurface {
+        anchors.fill: parent
+    }
 }

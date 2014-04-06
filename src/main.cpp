@@ -16,12 +16,16 @@
 #include <QQuickView>
 #include <QQmlEngine>
 
+#include "lasersurface.h"
+
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     a.setApplicationName(BEAMERDMX_NAME);
     a.setApplicationDisplayName(BEAMERDMX_NAME);
     a.setApplicationVersion(BEAMERDMX_VERSION);
+
+    qmlRegisterType<LaserSurface>("BeamerDMX", 1, 0, "LaserSurface");
 
     QQuickView mainWindow(QUrl("qrc:/qml/mainwindow.qml"));
     mainWindow.setTitle(a.applicationDisplayName() + " " + a.applicationVersion());
