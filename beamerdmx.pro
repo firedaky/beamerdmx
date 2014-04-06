@@ -17,11 +17,13 @@ DEFINES += "BEAMERDMX_NAME=\\\"BeamerDMX\\\""
 DEFINES += "BEAMERDMX_VERSION=\\\"0.0.1\\\""
 
 SOURCES += src/main.cpp \
-    src/lasersurface.cpp
+    src/lasersurface.cpp \
+    src/colors.cpp
 
 HEADERS  += \
     src/lasersurface.h \
-    src/channels.h
+    src/channels.h \
+    src/colors.h
 
 FORMS    +=
 
