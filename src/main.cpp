@@ -170,7 +170,7 @@ int main(int argc, char *argv[])
     }
     else
     {
-        qCritical() << "Could not find tilt fader";
+        qCritical() << "Could not find rotation fader";
         return -1;
     }
 
@@ -182,7 +182,7 @@ int main(int argc, char *argv[])
     }
     else
     {
-        qCritical() << "Could not find tilt fine fader";
+        qCritical() << "Could not find rotation fine fader";
         return -1;
     }
 
