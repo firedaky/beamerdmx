@@ -33,6 +33,7 @@ public slots:
     void onTiltChanged(qreal newValue);
     void onZoomChanged(qreal newValue);
     void onShutterChanged(bool newValue);
+    void onAngleChanged(qreal newValue);
 
 protected:
     QQuickItem* surface;

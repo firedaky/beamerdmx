@@ -161,11 +161,37 @@ int main(int argc, char *argv[])
         return -1;
     }
 
+    // Setup rotation
+    fader = mainWindow.rootObject()->findChild<QQuickItem*>("FaderRotation");
+    if (fader)
+    {
+        QObject::connect(fader, SIGNAL(faderMoved(qreal)), &controller, SLOT(onRotationCoarseChanged(qreal)));
+        fader->setProperty("faderValue", 128);
+    }
+    else
+    {
+        qCritical() << "Could not find tilt fader";
+        return -1;
+    }
+
+    fader = mainWindow.rootObject()->findChild<QQuickItem*>("FaderRotationFine");
+    if (fader)
+    {
+        QObject::connect(fader, SIGNAL(faderMoved(qreal)), &controller, SLOT(onRotationFineChanged(qreal)));
+        fader->setProperty("faderValue", 0);
+    }
+    else
+    {
+        qCritical() << "Could not find tilt fine fader";
+        return -1;
+    }
+
     QObject::connect(&controller, SIGNAL(dimmerChanged(qreal)), &beamerWindow, SLOT(onDimmerChanged(qreal)));
     QObject::connect(&controller, SIGNAL(panChanged(qreal)),    &beamerWindow, SLOT(onPanChanged(qreal)));
     QObject::connect(&controller, SIGNAL(tiltChanged(qreal)),   &beamerWindow, SLOT(onTiltChanged(qreal)));
     QObject::connect(&controller, SIGNAL(zoomChanged(qreal)),   &beamerWindow, SLOT(onZoomChanged(qreal)));
     QObject::connect(&controller, SIGNAL(shutterChanged(bool)), &beamerWindow, SLOT(onShutterChanged(bool)));
+    QObject::connect(&controller, SIGNAL(angleChanged(qreal)),  &beamerWindow, SLOT(onAngleChanged(qreal)));
 
     return a.exec();
 }

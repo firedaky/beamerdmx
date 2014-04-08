@@ -26,7 +26,9 @@ LaserController::LaserController(QObject *parent) :
     laserSurface(nullptr),
     blackoutPainter(nullptr),
     runningTime(0.0),
-    deltaTime(0.0)
+    deltaTime(0.0),
+    rotation(0.0),
+    rotationRate(0.0)
 {
     memset(dmxValues, 0, sizeof(dmxValues));
 }
@@ -111,6 +113,16 @@ void LaserController::onStrobeChanged(qreal newValue)
     dmxValues[static_cast<uint32_t>(DmxChannels::STROBE)] = static_cast<uint8_t>(newValue);
 }
 
+void LaserController::onRotationCoarseChanged(qreal newValue)
+{
+    dmxValues[static_cast<uint32_t>(DmxChannels::ROTATION)] = static_cast<uint8_t>(newValue);
+}
+
+void LaserController::onRotationFineChanged(qreal newValue)
+{
+    dmxValues[static_cast<uint32_t>(DmxChannels::ROTATION_FINE)] = static_cast<uint8_t>(newValue);
+}
+
 void LaserController::onTick()
 {
     double newTime = timeSource.elapsed() / 1000.0;
@@ -118,6 +130,7 @@ void LaserController::onTick()
     runningTime = newTime;
 
     updateShutter();
+    updateRotation();
 }
 
 void LaserController::updatePan()
@@ -209,4 +222,53 @@ void LaserController::updateShutter()
     }
 
     emit shutterChanged(shutterState);
+}
+
+void LaserController::updateRotation()
+{
+    static const int32_t rotationCWMax  = (126 << 8) + 255;
+    static const int32_t rotationCCWMin = (129 << 8) +   0;
+    static const double maxRPM = 2 * 360;
+
+    uint8_t rotationCoarse = dmxValues[static_cast<uint32_t>(DmxChannels::ROTATION)];
+    uint8_t rotationFine   = dmxValues[static_cast<uint32_t>(DmxChannels::ROTATION_FINE)];
+
+    int32_t rotation16Bit = (rotationCoarse << 8) + rotationFine;
+    qreal angle = 0.0;
+
+    // Check for index or rotating mode
+    if (dmxValues[static_cast<uint32_t>(DmxChannels::FILE)] < 128)
+    {
+        // Indexed mode
+        angle = (2.0 * (rotation16Bit / 65535.0)) - 1.0f;
+        angle *= 180;
+    }
+    else
+    {
+        // Rotating mode
+        if (rotation16Bit <= rotationCWMax)
+        {
+            double scaler = 1.0 - (rotation16Bit / (double)rotationCWMax);
+            rotationRate = maxRPM * scaler;
+        }
+        else if (rotation16Bit >= rotationCCWMin)
+        {
+            double scaler = (rotation16Bit - rotationCCWMin) / (65535.0 - rotationCCWMin);
+            rotationRate = -maxRPM * scaler;
+        }
+        else
+        {
+            rotationRate = 0;
+        }
+
+
+        angle = rotation + rotationRate * deltaTime;
+
+        while (angle >  180) angle -= 360;
+        while (angle < -180) angle += 360;
+    }
+
+    rotation = angle;
+
+    emit angleChanged(rotation);
 }

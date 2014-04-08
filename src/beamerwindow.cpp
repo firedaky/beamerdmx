@@ -67,3 +67,8 @@ void BeamerWindow::onShutterChanged(bool newValue)
 {
     surface->setProperty("shutter", newValue);
 }
+
+void BeamerWindow::onAngleChanged(qreal newValue)
+{
+    surface->setProperty("angle", newValue);
+}

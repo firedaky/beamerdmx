@@ -38,6 +38,7 @@ signals:
     void tiltChanged(qreal newValue);
     void zoomChanged(qreal newValue);
     void shutterChanged(bool newValue);
+    void angleChanged(qreal newValue);
 
 public slots:
     void onDimmerChanged(qreal newValue);
@@ -47,6 +48,8 @@ public slots:
     void onTiltFineChanged(qreal newValue);
     void onZoomChanged(qreal newValue);
     void onStrobeChanged(qreal newValue);
+    void onRotationCoarseChanged(qreal newValue);
+    void onRotationFineChanged(qreal newValue);
 
 protected slots:
     void onTick();
@@ -55,6 +58,7 @@ protected:
     void updatePan();
     void updateTilt();
     void updateShutter();
+    void updateRotation();
 
     LaserSurface* laserSurface;
     LaserPainter* blackoutPainter;    
@@ -69,4 +73,7 @@ protected:
 
     bool shutterState;
     double nextShutterToggleTime;
+
+    double rotation;
+    double rotationRate;
 };
