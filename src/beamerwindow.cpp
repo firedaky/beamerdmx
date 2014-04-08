@@ -62,3 +62,8 @@ void BeamerWindow::onZoomChanged(qreal newValue)
 {
     surface->setProperty("zoom", newValue);
 }
+
+void BeamerWindow::onShutterChanged(bool newValue)
+{
+    surface->setProperty("shutter", newValue);
+}

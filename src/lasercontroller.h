@@ -15,6 +15,8 @@
 #pragma once
 
 #include <QObject>
+#include <QTimer>
+#include <QTime>
 
 #include "channels.h"
 
@@ -35,6 +37,7 @@ signals:
     void panChanged(qreal newValue);
     void tiltChanged(qreal newValue);
     void zoomChanged(qreal newValue);
+    void shutterChanged(bool newValue);
 
 public slots:
     void onDimmerChanged(qreal newValue);
@@ -43,13 +46,27 @@ public slots:
     void onTiltCoarseChanged(qreal newValue);
     void onTiltFineChanged(qreal newValue);
     void onZoomChanged(qreal newValue);
+    void onStrobeChanged(qreal newValue);
+
+protected slots:
+    void onTick();
 
 protected:
     void updatePan();
     void updateTilt();
+    void updateShutter();
 
     LaserSurface* laserSurface;
     LaserPainter* blackoutPainter;    
 
     uint8_t dmxValues[static_cast<uint32_t>(DmxChannels::CHANNEL_COUNT)];
+
+    QTimer tickSource;
+    QTime timeSource;
+
+    double runningTime;
+    double deltaTime;
+
+    bool shutterState;
+    double nextShutterToggleTime;
 };

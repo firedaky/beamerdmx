@@ -213,6 +213,10 @@ Rectangle {
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             anchors.left: faderRotation.right
+
+            onFaderMoved: {
+                faderText = (newValue / 2.55).toFixed(1) + "%"
+            }
         }
 
         Fader {
@@ -227,6 +231,25 @@ Rectangle {
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             anchors.left:faderZoom.right
+
+            onFaderMoved: {
+                if (newValue < 16)
+                {
+                    faderText = "Closed";
+                }
+                else if (newValue < 129)
+                {
+                    faderText = (((newValue - 16.0) / (128 - 16)) * 9.0 + 1.0).toFixed(2) + " Hz Strobe"
+                }
+                else if (newValue < 240)
+                {
+                    faderText = "< " + (((newValue - 129.0) / (239 - 129)) * 9.0 + 1.0).toFixed(2) + " Hz Random"
+                }
+                else
+                {
+                    faderText = "Open";
+                }
+            }
         }
 
         Fader {

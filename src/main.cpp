@@ -24,6 +24,9 @@
 
 int main(int argc, char *argv[])
 {
+    // Setup RNG
+    qsrand(QTime::currentTime().msec());
+
     // Setup GUI
     QApplication a(argc, argv);
     a.setApplicationName(BEAMERDMX_NAME);
@@ -145,10 +148,24 @@ int main(int argc, char *argv[])
         return -1;
     }
 
+    // Setup strobe/shutter
+    fader = mainWindow.rootObject()->findChild<QQuickItem*>("FaderStrobe");
+    if (fader)
+    {
+        QObject::connect(fader, SIGNAL(faderMoved(qreal)), &controller, SLOT(onStrobeChanged(qreal)));
+        fader->setProperty("faderValue", 255);
+    }
+    else
+    {
+        qCritical() << "Could not find zoom fader";
+        return -1;
+    }
+
     QObject::connect(&controller, SIGNAL(dimmerChanged(qreal)), &beamerWindow, SLOT(onDimmerChanged(qreal)));
     QObject::connect(&controller, SIGNAL(panChanged(qreal)),    &beamerWindow, SLOT(onPanChanged(qreal)));
     QObject::connect(&controller, SIGNAL(tiltChanged(qreal)),   &beamerWindow, SLOT(onTiltChanged(qreal)));
     QObject::connect(&controller, SIGNAL(zoomChanged(qreal)),   &beamerWindow, SLOT(onZoomChanged(qreal)));
+    QObject::connect(&controller, SIGNAL(shutterChanged(bool)), &beamerWindow, SLOT(onShutterChanged(bool)));
 
     return a.exec();
 }
