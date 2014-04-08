@@ -33,7 +33,8 @@ FORMS    +=
 
 OTHER_FILES += \
     qml/mainwindow.qml \
-    qml/beamerwindow.qml
+    qml/beamerwindow.qml \
+    qml/Fader.qml
 
 RESOURCES += \
     beamerdmx.qrc
