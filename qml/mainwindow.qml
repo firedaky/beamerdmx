@@ -20,6 +20,10 @@ Rectangle {
     width: 1280; height: 800
     color: "lightgray"
 
+    signal desktopSelectionChanged(real newDesktopId)
+    signal showLaserFullscreen
+    signal showLaserNormal
+
     Rectangle {
         id: channelView
 
@@ -33,7 +37,7 @@ Rectangle {
 
         Fader {
             id: faderDimmer
-            objectName: "faderDimmer"
+            objectName: "FaderDimmer"
             faderLabel: "Dimmer"
             faderValue: 0.0
 
@@ -47,7 +51,7 @@ Rectangle {
 
         Fader {
             id: faderPan
-            objectName: "faderPan"
+            objectName: "FaderPan"
             faderLabel: "Pan (coarse)"
             faderValue: 0.0
 
@@ -61,7 +65,7 @@ Rectangle {
 
         Fader {
             id: faderTilt
-            objectName: "faderTilt"
+            objectName: "FaderTilt"
             faderLabel: "Tilt (coarse)"
             faderValue: 0.0
 
@@ -75,7 +79,7 @@ Rectangle {
 
         Fader {
             id: faderColor1
-            objectName: "faderColor1"
+            objectName: "FaderColor1"
             faderLabel: "Color 1"
             faderValue: 0.0
 
@@ -89,7 +93,7 @@ Rectangle {
 
         Fader {
             id: faderColor2
-            objectName: "faderColor2"
+            objectName: "FaderColor2"
             faderLabel: "Color 2"
             faderValue: 0.0
 
@@ -103,7 +107,7 @@ Rectangle {
 
         Fader {
             id: faderRed
-            objectName: "faderRed"
+            objectName: "FaderRed"
             faderLabel: "Red"
             faderValue: 0.0
 
@@ -117,7 +121,7 @@ Rectangle {
 
         Fader {
             id: faderGreen
-            objectName: "faderGreen"
+            objectName: "FaderGreen"
             faderLabel: "Green"
             faderValue: 0.0
 
@@ -131,7 +135,7 @@ Rectangle {
 
         Fader {
             id: faderBlue
-            objectName: "faderBlue"
+            objectName: "FaderBlue"
             faderLabel: "Blue"
             faderValue: 0.0
 
@@ -145,7 +149,7 @@ Rectangle {
 
         Fader {
             id: faderFolder
-            objectName: "faderFolder"
+            objectName: "FaderFolder"
             faderLabel: "Folder"
             faderValue: 0.0
 
@@ -159,7 +163,7 @@ Rectangle {
 
         Fader {
             id: faderFile
-            objectName: "faderFile"
+            objectName: "FaderFile"
             faderLabel: "File"
             faderValue: 0.0
 
@@ -173,7 +177,7 @@ Rectangle {
 
         Fader {
             id: faderRotation
-            objectName: "faderRotation"
+            objectName: "FaderRotation"
             faderLabel: "Rotation (coarse)"
             faderValue: 0.0
 
@@ -187,7 +191,7 @@ Rectangle {
 
         Fader {
             id: faderZoom
-            objectName: "faderZoom"
+            objectName: "FaderZoom"
             faderLabel: "Zoom"
             faderValue: 0.0
 
@@ -201,7 +205,7 @@ Rectangle {
 
         Fader {
             id: faderStrobe
-            objectName: "faderStrobe"
+            objectName: "FaderStrobe"
             faderLabel: "Strobe"
             faderValue: 0.0
 
@@ -215,7 +219,7 @@ Rectangle {
 
         Fader {
             id: faderBpm
-            objectName: "faderBpm"
+            objectName: "FaderBpm"
             faderLabel: "BPM"
             faderValue: 0.0
 
@@ -229,7 +233,7 @@ Rectangle {
 
         Fader {
             id: faderPanFine
-            objectName: "faderPanFine"
+            objectName: "FaderPanFine"
             faderLabel: "Pan (fine)"
             faderValue: 0.0
 
@@ -243,7 +247,7 @@ Rectangle {
 
         Fader {
             id: faderTiltFine
-            objectName: "faderTiltFine"
+            objectName: "FaderTiltFine"
             faderLabel: "Tilt (fine)"
             faderValue: 0.0
 
@@ -257,7 +261,7 @@ Rectangle {
 
         Fader {
             id: faderRotationFine
-            objectName: "faderRotationFine"
+            objectName: "FaderRotationFine"
             faderLabel: "Rotation (fine)"
             faderValue: 0.0
 
@@ -281,6 +285,42 @@ Rectangle {
         anchors.bottom: parent.bottom
 
         color: "darkgray"
+
+        Rectangle {
+            id: fullscreenButtons
+            width: childrenRect.width
+            height: childrenRect.height + 10
+
+            anchors.margins: 5
+            anchors.left: parent.left
+            anchors.top: parent.top
+
+            color: "lightgray"
+
+            Button {
+                anchors.margins: 5
+                anchors.top: parent.top
+                anchors.left: parent.left
+
+                text: "Show normal"
+
+                onClicked: {
+                    showLaserNormal()
+                }
+            }
+
+            Button {
+                anchors.margins: 5
+                anchors.top: parent.top
+                anchors.right: parent.right
+
+                text: "Show fullscreen"
+
+                onClicked: {
+                    showLaserFullscreen()
+                }
+            }
+        }
 
         Button {
             anchors.margins: 5

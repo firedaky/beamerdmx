@@ -16,12 +16,14 @@
 #include <QDebug>
 #include <QQuickView>
 #include <QQmlEngine>
+#include <QDesktopWidget>
 
 #include "lasercontroller.h"
 #include "lasersurface.h"
 
 int main(int argc, char *argv[])
 {
+    // Setup GUI
     QApplication a(argc, argv);
     a.setApplicationName(BEAMERDMX_NAME);
     a.setApplicationDisplayName(BEAMERDMX_NAME);
@@ -38,6 +40,7 @@ int main(int argc, char *argv[])
     beamerWindow.setResizeMode(QQuickView::SizeRootObjectToView);
     beamerWindow.show();
 
+    // Initialize laser graphics
     LaserSurface* surface = beamerWindow.rootObject()->findChild<LaserSurface*>("LaserSurface");
     if (!surface)
     {
@@ -52,7 +55,11 @@ int main(int argc, char *argv[])
         return -1;
     }
 
+    // Setup controls data and connections
     a.connect(dynamic_cast<QObject*>(mainWindow.engine()), SIGNAL(quit()), SLOT(quit()));
+
+    QObject::connect(mainWindow.rootObject(), SIGNAL(showLaserNormal()), &beamerWindow, SLOT(showNormal()));
+    QObject::connect(mainWindow.rootObject(), SIGNAL(showLaserFullscreen()), &beamerWindow, SLOT(showFullScreen()));
 
     return a.exec();
 }
