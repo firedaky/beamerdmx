@@ -12,27 +12,27 @@
 //   See the License for the specific language governing permissions and
 //   limitations under the License.
 
-#include <QPainter>
+#pragma once
 
-#include "colors.h"
-#include "laserpainter.h"
+#include <QQuickView>
 
-LaserPainter::LaserPainter(QObject *parent) :
-    QObject(parent),
-    primaryColor(Colors::Blue),
-    secondaryColor(Colors::Black)
+class BeamerWindow : public QQuickView
 {
-}
+    Q_OBJECT
+public:
+    explicit BeamerWindow(QWindow *parent = 0);
+    explicit BeamerWindow(const QUrl& source, QWindow* parent = 0);
 
-LaserPainter::LaserPainter(QColor primary, QColor secondary, QObject *parent) :
-    QObject(parent),
-    primaryColor(primary),
-    secondaryColor(secondary)
-{
+    bool initialize();
 
-}
+signals:
 
-void LaserPainter::paint(QPainter *painter, QRectF boundingRect)
-{
-    painter->fillRect(boundingRect, primaryColor);
-}
+public slots:
+    void onDimmerChanged(qreal newValue);
+    void onPanChanged(qreal newValue);
+    void onTiltChanged(qreal newValue);
+    void onZoomChanged(qreal newValue);
+
+protected:
+    QQuickItem* surface;
+};

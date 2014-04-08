@@ -47,6 +47,10 @@ Rectangle {
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             anchors.left: parent.left
+
+            onFaderMoved: {
+                faderText = (newValue / 2.55).toFixed(1) + "%"
+            }
         }
 
         Fader {
@@ -61,6 +65,10 @@ Rectangle {
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             anchors.left: faderDimmer.right
+
+            onFaderMoved: {
+                faderText = newValue.toFixed(0)
+            }
         }
 
         Fader {
@@ -75,6 +83,10 @@ Rectangle {
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             anchors.left: faderPan.right
+
+            onFaderMoved: {
+                faderText = newValue.toFixed(0)
+            }
         }
 
         Fader {
@@ -243,6 +255,10 @@ Rectangle {
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             anchors.left: faderBpm.right
+
+            onFaderMoved: {
+                faderText = newValue.toFixed(0)
+            }
         }
 
         Fader {
@@ -257,6 +273,10 @@ Rectangle {
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             anchors.left: faderPanFine.right
+
+            onFaderMoved: {
+                faderText = newValue.toFixed(0)
+            }
         }
 
         Fader {
@@ -271,6 +291,10 @@ Rectangle {
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             anchors.left: faderTiltFine.right
+
+            onFaderMoved: {
+                faderText = newValue.toFixed(0)
+            }
         }
     }
 
@@ -288,7 +312,7 @@ Rectangle {
 
         Rectangle {
             id: fullscreenButtons
-            width: childrenRect.width
+            width: childrenRect.width + 15
             height: childrenRect.height + 10
 
             anchors.margins: 5
@@ -298,6 +322,8 @@ Rectangle {
             color: "lightgray"
 
             Button {
+                id: normalButton
+
                 anchors.margins: 5
                 anchors.top: parent.top
                 anchors.left: parent.left
@@ -312,7 +338,7 @@ Rectangle {
             Button {
                 anchors.margins: 5
                 anchors.top: parent.top
-                anchors.right: parent.right
+                anchors.left: normalButton.right
 
                 text: "Show fullscreen"
 

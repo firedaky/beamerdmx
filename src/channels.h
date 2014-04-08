@@ -18,7 +18,7 @@
 
 enum class DmxChannels: uint32_t
 {
-    DIMMER = 1,
+    DIMMER = 0,
     PAN,
     TILT,
     COLOR1,
@@ -34,7 +34,8 @@ enum class DmxChannels: uint32_t
     BPM,
     PAN_FINE,
     TILT_FINE,
-    ROTATION_FINE
+    ROTATION_FINE,
+    CHANNEL_COUNT
 };
 
 /*

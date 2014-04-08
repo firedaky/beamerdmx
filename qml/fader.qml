@@ -7,7 +7,7 @@ Item {
     property string faderText: "0"
     property color faderBackground: "lightgray"
 
-    signal faderValueGuiChanged(real newValue)
+    signal faderMoved(real newValue)
 
     Rectangle {
         anchors.fill: parent
@@ -41,7 +41,7 @@ Item {
             anchors.bottom: faderTextField.top
 
             onValueChanged: {
-                faderValueGuiChanged(value)
+                faderMoved(value)
             }
         }
 

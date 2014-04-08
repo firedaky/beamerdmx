@@ -21,7 +21,22 @@ Rectangle {
     color: "black"
 
     LaserSurface {
-        anchors.fill: parent
+        property real pan: 0.0
+        property real tilt: 0.0
+        property real zoom: 1.0
+        property bool shutter: true
+        property real dimmer: 1.0
+        property real angle: 0.0
+
+        x: ((parent.width - width) / 2)   + pan  * parent.width
+        y: ((parent.height - height) / 2) + tilt * parent.height
+
+        width: parent.width
+        height: parent.height
+
+        scale: zoom
+        rotation: angle
+        opacity: dimmer * shutter
 
         objectName: "LaserSurface"
     }

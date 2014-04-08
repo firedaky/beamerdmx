@@ -20,6 +20,7 @@
 
 #include "lasercontroller.h"
 #include "lasersurface.h"
+#include "beamerwindow.h"
 
 int main(int argc, char *argv[])
 {
@@ -36,9 +37,14 @@ int main(int argc, char *argv[])
     mainWindow.setResizeMode(QQuickView::SizeRootObjectToView);
     mainWindow.show();
 
-    QQuickView beamerWindow(QUrl("qrc:/qml/beamerwindow.qml"));
+    BeamerWindow beamerWindow(QUrl("qrc:/qml/beamerwindow.qml"));
     beamerWindow.setResizeMode(QQuickView::SizeRootObjectToView);
     beamerWindow.show();
+    if (!beamerWindow.initialize())
+    {
+        qCritical() << "Beamer window initialization failed";
+        return -1;
+    }
 
     // Initialize laser graphics
     LaserSurface* surface = beamerWindow.rootObject()->findChild<LaserSurface*>("LaserSurface");
@@ -60,6 +66,89 @@ int main(int argc, char *argv[])
 
     QObject::connect(mainWindow.rootObject(), SIGNAL(showLaserNormal()), &beamerWindow, SLOT(showNormal()));
     QObject::connect(mainWindow.rootObject(), SIGNAL(showLaserFullscreen()), &beamerWindow, SLOT(showFullScreen()));
+
+    QQuickItem* fader;
+
+    // Setup dimmer
+    fader = mainWindow.rootObject()->findChild<QQuickItem*>("FaderDimmer");
+    if (fader)
+    {
+        QObject::connect(fader, SIGNAL(faderMoved(qreal)), &controller, SLOT(onDimmerChanged(qreal)));
+        fader->setProperty("faderValue", 255);
+    }
+    else
+    {
+        qCritical() << "Could not find dimmer fader";
+        return -1;
+    }
+
+    // Setup pan
+    fader = mainWindow.rootObject()->findChild<QQuickItem*>("FaderPan");
+    if (fader)
+    {
+        QObject::connect(fader, SIGNAL(faderMoved(qreal)), &controller, SLOT(onPanCoarseChanged(qreal)));
+        fader->setProperty("faderValue", 128);
+    }
+    else
+    {
+        qCritical() << "Could not find pan fader";
+        return -1;
+    }
+
+    fader = mainWindow.rootObject()->findChild<QQuickItem*>("FaderPanFine");
+    if (fader)
+    {
+        QObject::connect(fader, SIGNAL(faderMoved(qreal)), &controller, SLOT(onPanFineChanged(qreal)));
+        fader->setProperty("faderValue", 0);
+    }
+    else
+    {
+        qCritical() << "Could not find pan fine fader";
+        return -1;
+    }
+
+    // Setup tilt
+    fader = mainWindow.rootObject()->findChild<QQuickItem*>("FaderTilt");
+    if (fader)
+    {
+        QObject::connect(fader, SIGNAL(faderMoved(qreal)), &controller, SLOT(onTiltCoarseChanged(qreal)));
+        fader->setProperty("faderValue", 128);
+    }
+    else
+    {
+        qCritical() << "Could not find tilt fader";
+        return -1;
+    }
+
+    fader = mainWindow.rootObject()->findChild<QQuickItem*>("FaderTiltFine");
+    if (fader)
+    {
+        QObject::connect(fader, SIGNAL(faderMoved(qreal)), &controller, SLOT(onTiltFineChanged(qreal)));
+        fader->setProperty("faderValue", 0);
+    }
+    else
+    {
+        qCritical() << "Could not find tilt fine fader";
+        return -1;
+    }
+
+    // Setup zoom
+    fader = mainWindow.rootObject()->findChild<QQuickItem*>("FaderZoom");
+    if (fader)
+    {
+        QObject::connect(fader, SIGNAL(faderMoved(qreal)), &controller, SLOT(onZoomChanged(qreal)));
+        fader->setProperty("faderValue", 255);
+    }
+    else
+    {
+        qCritical() << "Could not find zoom fader";
+        return -1;
+    }
+
+    QObject::connect(&controller, SIGNAL(dimmerChanged(qreal)), &beamerWindow, SLOT(onDimmerChanged(qreal)));
+    QObject::connect(&controller, SIGNAL(panChanged(qreal)),    &beamerWindow, SLOT(onPanChanged(qreal)));
+    QObject::connect(&controller, SIGNAL(tiltChanged(qreal)),   &beamerWindow, SLOT(onTiltChanged(qreal)));
+    QObject::connect(&controller, SIGNAL(zoomChanged(qreal)),   &beamerWindow, SLOT(onZoomChanged(qreal)));
 
     return a.exec();
 }

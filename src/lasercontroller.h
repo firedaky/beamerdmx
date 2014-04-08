@@ -16,6 +16,8 @@
 
 #include <QObject>
 
+#include "channels.h"
+
 class LaserSurface;
 class LaserPainter;
 
@@ -29,10 +31,25 @@ public:
     bool initialize(LaserSurface* surface);
 
 signals:
+    void dimmerChanged(qreal newValue);
+    void panChanged(qreal newValue);
+    void tiltChanged(qreal newValue);
+    void zoomChanged(qreal newValue);
 
 public slots:
+    void onDimmerChanged(qreal newValue);
+    void onPanCoarseChanged(qreal newValue);
+    void onPanFineChanged(qreal newValue);
+    void onTiltCoarseChanged(qreal newValue);
+    void onTiltFineChanged(qreal newValue);
+    void onZoomChanged(qreal newValue);
 
 protected:
+    void updatePan();
+    void updateTilt();
+
     LaserSurface* laserSurface;
-    LaserPainter* blackoutPainter;
+    LaserPainter* blackoutPainter;    
+
+    uint8_t dmxValues[static_cast<uint32_t>(DmxChannels::CHANNEL_COUNT)];
 };

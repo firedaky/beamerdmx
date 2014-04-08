@@ -26,6 +26,7 @@ LaserController::LaserController(QObject *parent) :
     laserSurface(nullptr),
     blackoutPainter(nullptr)
 {
+    memset(dmxValues, 0, sizeof(dmxValues));
 }
 
 LaserController::~LaserController()
@@ -51,4 +52,68 @@ bool LaserController::initialize(LaserSurface *surface)
     laserSurface->setLaserPainter(blackoutPainter);
 
     return true;
+}
+
+void LaserController::onDimmerChanged(qreal newValue)
+{
+    dmxValues[static_cast<uint32_t>(DmxChannels::DIMMER)] = static_cast<uint8_t>(newValue);
+
+    emit dimmerChanged(newValue / 255.0);
+}
+
+void LaserController::onPanCoarseChanged(qreal newValue)
+{
+    dmxValues[static_cast<uint32_t>(DmxChannels::PAN)] = static_cast<uint8_t>(newValue);
+
+    updatePan();
+}
+
+void LaserController::onPanFineChanged(qreal newValue)
+{
+    dmxValues[static_cast<uint32_t>(DmxChannels::PAN_FINE)] = static_cast<uint8_t>(newValue);
+
+    updatePan();
+}
+
+void LaserController::onTiltCoarseChanged(qreal newValue)
+{
+    dmxValues[static_cast<uint32_t>(DmxChannels::TILT)] = static_cast<uint8_t>(newValue);
+
+    updateTilt();
+}
+
+void LaserController::onTiltFineChanged(qreal newValue)
+{
+    dmxValues[static_cast<uint32_t>(DmxChannels::TILT_FINE)] = static_cast<uint8_t>(newValue);
+
+    updateTilt();
+}
+
+void LaserController::onZoomChanged(qreal newValue)
+{
+    dmxValues[static_cast<uint32_t>(DmxChannels::ZOOM)] = static_cast<uint8_t>(newValue);
+
+    emit zoomChanged(newValue / 255.0);
+}
+
+void LaserController::updatePan()
+{
+    uint8_t panCoarse = dmxValues[static_cast<uint32_t>(DmxChannels::PAN)];
+    uint8_t panFine   = dmxValues[static_cast<uint32_t>(DmxChannels::PAN_FINE)];
+
+    int32_t pan16Bit = (panCoarse << 8) + panFine;
+    qreal newPan = (2.0 * (pan16Bit / 65535.0)) - 1.0f;
+
+    emit panChanged(newPan);
+}
+
+void LaserController::updateTilt()
+{
+    uint8_t tiltCoarse = dmxValues[static_cast<uint32_t>(DmxChannels::TILT)];
+    uint8_t tiltFine   = dmxValues[static_cast<uint32_t>(DmxChannels::TILT_FINE)];
+
+    int32_t tilt16Bit = (tiltCoarse << 8) + tiltFine;
+    qreal newTilt = (2.0 * (tilt16Bit / 65535.0)) - 1.0f;
+
+    emit tiltChanged(newTilt);
 }
