@@ -101,6 +101,69 @@ Rectangle {
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             anchors.left: faderTilt.right
+
+            onFaderMoved: {
+                if (newValue < 8)
+                {
+                    faderText = "From file"
+                }
+                else if (newValue < 16)
+                {
+                    faderText = "RGB"
+                }
+                else if (newValue < 24)
+                {
+                    faderText = "Red"
+                }
+                else if (newValue < 32)
+                {
+                    faderText = "Amber"
+                }
+                else if (newValue < 40)
+                {
+                    faderText = "Yellow"
+                }
+                else if (newValue < 48)
+                {
+                    faderText = "Light Green"
+                }
+                else if (newValue < 56)
+                {
+                    faderText = "Green"
+                }
+                else if (newValue < 64)
+                {
+                    faderText = "Cyan"
+                }
+                else if (newValue < 72)
+                {
+                    faderText = "Light Blue"
+                }
+                else if (newValue < 80)
+                {
+                    faderText = "Blue"
+                }
+                else if (newValue < 88)
+                {
+                    faderText = "Magenta"
+                }
+                else if (newValue < 96)
+                {
+                    faderText = "Pink"
+                }
+                else if (newValue < 128)
+                {
+                    faderText = "Open"
+                }
+                else if (newValue < 192)
+                {
+                    faderText = "Rainbow >"
+                }
+                else
+                {
+                    faderText = "Rainbow <"
+                }
+            }
         }
 
         Fader {
@@ -115,6 +178,69 @@ Rectangle {
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             anchors.left: faderColor1.right
+
+            onFaderMoved: {
+                if (newValue < 8)
+                {
+                    faderText = "From file"
+                }
+                else if (newValue < 16)
+                {
+                    faderText = "RGB"
+                }
+                else if (newValue < 24)
+                {
+                    faderText = "Red"
+                }
+                else if (newValue < 32)
+                {
+                    faderText = "Amber"
+                }
+                else if (newValue < 40)
+                {
+                    faderText = "Yellow"
+                }
+                else if (newValue < 48)
+                {
+                    faderText = "Light Green"
+                }
+                else if (newValue < 56)
+                {
+                    faderText = "Green"
+                }
+                else if (newValue < 64)
+                {
+                    faderText = "Cyan"
+                }
+                else if (newValue < 72)
+                {
+                    faderText = "Light Blue"
+                }
+                else if (newValue < 80)
+                {
+                    faderText = "Blue"
+                }
+                else if (newValue < 88)
+                {
+                    faderText = "Magenta"
+                }
+                else if (newValue < 96)
+                {
+                    faderText = "Pink"
+                }
+                else if (newValue < 128)
+                {
+                    faderText = "Open"
+                }
+                else if (newValue < 192)
+                {
+                    faderText = "Rainbow >"
+                }
+                else
+                {
+                    faderText = "Rainbow <"
+                }
+            }
         }
 
         Fader {
@@ -129,6 +255,10 @@ Rectangle {
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             anchors.left: faderColor2.right
+
+            onFaderMoved: {
+                faderText = (newValue / 2.55).toFixed(1) + "%"
+            }
         }
 
         Fader {
@@ -143,6 +273,10 @@ Rectangle {
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             anchors.left: faderRed.right
+
+            onFaderMoved: {
+                faderText = (newValue / 2.55).toFixed(1) + "%"
+            }
         }
 
         Fader {
@@ -157,6 +291,10 @@ Rectangle {
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             anchors.left: faderGreen.right
+
+            onFaderMoved: {
+                faderText = (newValue / 2.55).toFixed(1) + "%"
+            }
         }
 
         Fader {
@@ -171,6 +309,10 @@ Rectangle {
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             anchors.left: faderBlue.right
+
+            onFaderMoved: {
+                faderText = "Folder " + ((Math.floor((newValue) / 4)) + 1).toFixed(0);
+            }
         }
 
         Fader {
@@ -185,6 +327,19 @@ Rectangle {
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             anchors.left: faderFolder.right
+
+            onFaderMoved: {
+                var upperHalf = newValue > 128
+
+                if (upperHalf)
+                {
+                    faderText = "File " + ((Math.floor((newValue - 128) / 4)) + 1).toFixed(0) + " (rotating)"
+                }
+                else
+                {
+                    faderText = "File " + ((Math.floor(newValue / 4)) + 1).toFixed(0) + " (indexed)"
+                }
+            }
         }
 
         Fader {
@@ -199,6 +354,10 @@ Rectangle {
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             anchors.left: faderFile.right
+
+            onFaderMoved: {
+                faderText = newValue.toFixed(0)
+            }
         }
 
         Fader {
@@ -264,6 +423,10 @@ Rectangle {
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             anchors.left: faderStrobe.right
+
+            onFaderMoved: {
+                faderText = newValue.toFixed(0) + " BPM"
+            }
         }
 
         Fader {
