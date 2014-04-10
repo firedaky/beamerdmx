@@ -17,6 +17,7 @@
 #include <QObject>
 #include <QTimer>
 #include <QTime>
+#include <QColor>
 
 #include "channels.h"
 
@@ -50,6 +51,11 @@ public slots:
     void onStrobeChanged(qreal newValue);
     void onRotationCoarseChanged(qreal newValue);
     void onRotationFineChanged(qreal newValue);
+    void onColor1Changed(qreal newValue);
+    void onColor2Changed(qreal newValue);
+    void onRedChanged(qreal newValue);
+    void onGreenChanged(qreal newValue);
+    void onBlueChanged(qreal newValue);
 
 protected slots:
     void onTick();
@@ -59,9 +65,12 @@ protected:
     void updateTilt();
     void updateShutter();
     void updateRotation();
+    void updateColors();
+    void updateColorsHelper(uint8_t channelValue, bool& override, QColor& color, int& rainbowIndex, double& nextRainbowTime, bool channelChanged);
 
     LaserSurface* laserSurface;
-    LaserPainter* blackoutPainter;    
+    LaserPainter* currentPainter;
+    LaserPainter* blackoutPainter;
 
     uint8_t dmxValues[static_cast<uint32_t>(DmxChannels::CHANNEL_COUNT)];
 
@@ -76,4 +85,15 @@ protected:
 
     double rotation;
     double rotationRate;
+
+    bool overridePrimaryColor;
+    bool overrideSecondaryColor;
+    QColor primaryColor;
+    QColor secondaryColor;
+    int primaryRainbowIndex;
+    int secondaryRainbowIndex;
+    double nextPrimaryRainbowTime;
+    double nextSecondaryRainbowTime;
+    bool primaryColorChannelChanged;
+    bool secondaryColorChannelChanged;
 };

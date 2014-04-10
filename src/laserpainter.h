@@ -32,9 +32,14 @@ public:
 signals:
 
 public slots:
+    void onPrimaryColorUpdated(bool override, QColor newColor);
+    void onSecondaryColorUpdated(bool override, QColor newColor);
 
 protected:
     QColor primaryColor;
     QColor secondaryColor;
-
+    QColor primaryOverrideColor;
+    QColor secondaryOverrideColor;
+    bool overridePrimary;
+    bool overrideSecondary;
 };

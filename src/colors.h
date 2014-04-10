@@ -32,4 +32,7 @@ extern QColor Pink;
 extern QColor White;
 extern QColor Black;
 
+extern QColor RainbowColors[];
+extern const int RainbowColorCount;
+
 }

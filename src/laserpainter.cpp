@@ -20,19 +20,41 @@
 LaserPainter::LaserPainter(QObject *parent) :
     QObject(parent),
     primaryColor(Colors::Blue),
-    secondaryColor(Colors::Black)
+    secondaryColor(Colors::Black),
+    primaryOverrideColor(Colors::Black),
+    secondaryOverrideColor(Colors::Black),
+    overridePrimary(false),
+    overrideSecondary(false)
 {
 }
 
 LaserPainter::LaserPainter(QColor primary, QColor secondary, QObject *parent) :
     QObject(parent),
     primaryColor(primary),
-    secondaryColor(secondary)
+    secondaryColor(secondary),
+    primaryOverrideColor(primary),
+    secondaryOverrideColor(secondary),
+    overridePrimary(false),
+    overrideSecondary(false)
 {
 
 }
 
 void LaserPainter::paint(QPainter *painter, QRectF boundingRect)
 {
-    painter->fillRect(boundingRect, primaryColor);
+    painter->fillRect(boundingRect, overridePrimary ? primaryOverrideColor : primaryColor);
+    painter->setPen(overrideSecondary ? secondaryOverrideColor : secondaryColor);
+    painter->drawEllipse(boundingRect);
+}
+
+void LaserPainter::onPrimaryColorUpdated(bool override, QColor newColor)
+{
+    overridePrimary = override;
+    primaryOverrideColor = newColor;
+}
+
+void LaserPainter::onSecondaryColorUpdated(bool override, QColor newColor)
+{
+    overrideSecondary = override;
+    secondaryOverrideColor = newColor;
 }

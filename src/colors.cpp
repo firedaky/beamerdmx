@@ -30,4 +30,20 @@ QColor Pink       = QColor(255,   0, 128);
 QColor White      = QColor(255, 255, 255);
 QColor Black      = QColor(  0,   0,   0);
 
+QColor RainbowColors[] = {
+    Red,
+    Amber,
+    Yellow,
+    LightGreen,
+    Green,
+    Cyan,
+    LightBlue,
+    Blue,
+    Magenta,
+    Pink,
+    White
+};
+
+const int RainbowColorCount = sizeof(RainbowColors) / sizeof(RainbowColors[0]);
+
 }
