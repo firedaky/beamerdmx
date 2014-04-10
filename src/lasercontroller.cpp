@@ -18,15 +18,13 @@
 #include "colors.h"
 
 #include "lasersurface.h"
-#include "painters/laserpainter.h"
-#include "painters/blackoutpainter.h"
+#include "paintermanager.h"
 #include "lasercontroller.h"
 
 LaserController::LaserController(QObject *parent) :
     QObject(parent),
     laserSurface(nullptr),
-    currentPainter(nullptr),
-    blackoutPainter(nullptr),
+    manager(nullptr),
     runningTime(0.0),
     deltaTime(0.0),
     shutterState(false),
@@ -44,10 +42,6 @@ LaserController::LaserController(QObject *parent) :
 
 LaserController::~LaserController()
 {
-    if (laserSurface)
-    {
-        laserSurface->setLaserPainter(nullptr);
-    }
 }
 
 bool LaserController::initialize(LaserSurface *surface)
@@ -60,10 +54,12 @@ bool LaserController::initialize(LaserSurface *surface)
 
     laserSurface = surface;
 
-    blackoutPainter = new BlackoutPainter(this);
-    currentPainter = blackoutPainter;
-
-    laserSurface->setLaserPainter(currentPainter);
+    manager = new PainterManager(this);
+    if (!manager->initialize(laserSurface))
+    {
+        qCritical() << "Painter manager initialization failed";
+        return false;
+    }
 
     timeSource = QTime::currentTime();
 
@@ -165,17 +161,23 @@ void LaserController::onBpmChanged(qreal newValue)
 {
     dmxValues[static_cast<uint32_t>(DmxChannels::BPM)] = static_cast<uint8_t>(newValue);
 
-    currentPainter->onBpmChanged(newValue);
+    manager->onBpmChanged(newValue);
 }
 
 void LaserController::onFolderChanged(qreal newValue)
 {
     dmxValues[static_cast<uint32_t>(DmxChannels::FOLDER)] = static_cast<uint8_t>(newValue);
+
+    manager->onChangePainter( dmxValues[static_cast<uint32_t>(DmxChannels::FOLDER)] / 4,
+                             (dmxValues[static_cast<uint32_t>(DmxChannels::FILE)] / 4) & 0x1f);
 }
 
 void LaserController::onFileChanged(qreal newValue)
 {
     dmxValues[static_cast<uint32_t>(DmxChannels::FILE)] = static_cast<uint8_t>(newValue);
+
+    manager->onChangePainter( dmxValues[static_cast<uint32_t>(DmxChannels::FOLDER)] / 4,
+                             (dmxValues[static_cast<uint32_t>(DmxChannels::FILE)] / 4) & 0x1f);
 }
 
 void LaserController::onTick()
@@ -188,7 +190,7 @@ void LaserController::onTick()
     updateRotation();
     updateColors();
 
-    currentPainter->onTick(runningTime, deltaTime);
+    manager->onTick(runningTime, deltaTime);
 
     laserSurface->update();
 }
@@ -353,7 +355,7 @@ void LaserController::updateColors()
             primaryRainbowIndex,
             nextPrimaryRainbowTime,
             primaryColorChannelChanged);
-    currentPainter->onPrimaryColorUpdated(overridePrimaryColor, primaryColor);
+    manager->onPrimaryColorUpdated(overridePrimaryColor, primaryColor);
     primaryColorChannelChanged = false;
 
     updateColorsHelper(dmxValues[static_cast<uint32_t>(DmxChannels::COLOR2)],
@@ -362,7 +364,7 @@ void LaserController::updateColors()
             secondaryRainbowIndex,
             nextSecondaryRainbowTime,
             secondaryColorChannelChanged);
-    currentPainter->onSecondaryColorUpdated(overrideSecondaryColor, secondaryColor);
+    manager->onSecondaryColorUpdated(overrideSecondaryColor, secondaryColor);
     secondaryColorChannelChanged = false;
 }
 

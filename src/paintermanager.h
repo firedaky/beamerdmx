@@ -14,37 +14,39 @@
 
 #pragma once
 
+#include <vector>
+
 #include <QObject>
-#include <QRectF>
 #include <QColor>
-#include <QPainter>
 
-class QPainter;
+class LaserPainter;
+class LaserSurface;
 
-class LaserPainter : public QObject
+class PainterManager : public QObject
 {
     Q_OBJECT
 public:
-    explicit LaserPainter(QObject *parent = 0);
-    LaserPainter(QColor primary, QColor secondary, QObject* parent = 0);
+    explicit PainterManager(QObject *parent = 0);
+    virtual ~PainterManager();
 
-    virtual bool initialize();
-    virtual void restart();
-    virtual void stop();
-
-    virtual void paint(QPainter* painter, QRectF boundingRect) = 0;
+    bool initialize(LaserSurface *surface);
 
 signals:
 
 public slots:
+    void onChangePainter(int newFolder, int newFile);
     void onPrimaryColorUpdated(bool override, QColor newColor);
     void onSecondaryColorUpdated(bool override, QColor newColor);
     void onBpmChanged(qreal newValue);
     void onTick(double runningTime, double deltaTime);
 
 protected:
-    QColor primaryColor;
-    QColor secondaryColor;
+    std::vector<LaserPainter*> painters;
+    LaserPainter* currentPainter;
+    LaserSurface* surface;
+    int currentFile;
+    int currentFolder;
+
     QColor primaryOverrideColor;
     QColor secondaryOverrideColor;
     bool overridePrimary;

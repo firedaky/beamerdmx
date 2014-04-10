@@ -23,6 +23,7 @@
 
 class LaserSurface;
 class LaserPainter;
+class PainterManager;
 
 class LaserController : public QObject
 {
@@ -73,8 +74,7 @@ protected:
     void updateColorsHelper(uint8_t channelValue, bool& override, QColor& color, int& rainbowIndex, double& nextRainbowTime, bool channelChanged);
 
     LaserSurface* laserSurface;
-    LaserPainter* currentPainter;
-    LaserPainter* blackoutPainter;
+    PainterManager* manager;
 
     uint8_t dmxValues[static_cast<uint32_t>(DmxChannels::CHANNEL_COUNT)];
 

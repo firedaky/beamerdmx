@@ -51,6 +51,16 @@ bool LaserPainter::initialize()
     return true;
 }
 
+void LaserPainter::restart()
+{
+
+}
+
+void LaserPainter::stop()
+{
+
+}
+
 void LaserPainter::onPrimaryColorUpdated(bool override, QColor newColor)
 {
     overridePrimary = override;
