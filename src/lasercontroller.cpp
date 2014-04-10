@@ -18,7 +18,8 @@
 #include "colors.h"
 
 #include "lasersurface.h"
-#include "laserpainter.h"
+#include "painters/laserpainter.h"
+#include "painters/blackoutpainter.h"
 #include "lasercontroller.h"
 
 LaserController::LaserController(QObject *parent) :
@@ -59,7 +60,7 @@ bool LaserController::initialize(LaserSurface *surface)
 
     laserSurface = surface;
 
-    blackoutPainter = new LaserPainter(this);
+    blackoutPainter = new BlackoutPainter(this);
     currentPainter = blackoutPainter;
 
     laserSurface->setLaserPainter(currentPainter);

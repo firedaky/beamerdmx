@@ -14,39 +14,18 @@
 
 #pragma once
 
-#include <QObject>
-#include <QRectF>
-#include <QColor>
+#include "laserpainter.h"
 
-class QPainter;
-
-class LaserPainter : public QObject
+class BlackoutPainter : public LaserPainter
 {
     Q_OBJECT
 public:
-    explicit LaserPainter(QObject *parent = 0);
-    LaserPainter(QColor primary, QColor secondary, QObject* parent = 0);
-
-    virtual bool initialize();
+    explicit BlackoutPainter(QObject *parent = 0);
 
     virtual void paint(QPainter* painter, QRectF boundingRect);
 
 signals:
 
 public slots:
-    void onPrimaryColorUpdated(bool override, QColor newColor);
-    void onSecondaryColorUpdated(bool override, QColor newColor);
-    void onBpmChanged(qreal newValue);
-    void onTick(double runningTime, double deltaTime);
 
-protected:
-    QColor primaryColor;
-    QColor secondaryColor;
-    QColor primaryOverrideColor;
-    QColor secondaryOverrideColor;
-    bool overridePrimary;
-    bool overrideSecondary;
-    qreal bpm;
-    qreal runningTime;
-    qreal deltaTime;
 };

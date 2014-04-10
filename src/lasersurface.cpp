@@ -14,7 +14,7 @@
 
 #include <QPainter>
 
-#include "laserpainter.h"
+#include "painters/laserpainter.h"
 #include "lasersurface.h"
 
 LaserSurface::LaserSurface(QQuickItem *parent) :

@@ -20,16 +20,18 @@ SOURCES += src/main.cpp \
     src/lasersurface.cpp \
     src/colors.cpp \
     src/lasercontroller.cpp \
-    src/laserpainter.cpp \
-    src/beamerwindow.cpp
+    src/painters/laserpainter.cpp \
+    src/beamerwindow.cpp \
+    src/painters/blackoutpainter.cpp
 
 HEADERS  += \
     src/lasersurface.h \
     src/channels.h \
     src/colors.h \
     src/lasercontroller.h \
-    src/laserpainter.h \
-    src/beamerwindow.h
+    src/painters/laserpainter.h \
+    src/beamerwindow.h \
+    src/painters/blackoutpainter.h
 
 FORMS    +=
 

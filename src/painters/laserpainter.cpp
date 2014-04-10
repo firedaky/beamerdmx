@@ -14,12 +14,12 @@
 
 #include <QPainter>
 
-#include "colors.h"
+#include "../colors.h"
 #include "laserpainter.h"
 
 LaserPainter::LaserPainter(QObject *parent) :
     QObject(parent),
-    primaryColor(Colors::Blue),
+    primaryColor(Colors::Black),
     secondaryColor(Colors::Black),
     primaryOverrideColor(Colors::Black),
     secondaryOverrideColor(Colors::Black),
@@ -49,13 +49,6 @@ LaserPainter::LaserPainter(QColor primary, QColor secondary, QObject *parent) :
 bool LaserPainter::initialize()
 {
     return true;
-}
-
-void LaserPainter::paint(QPainter *painter, QRectF boundingRect)
-{
-    painter->fillRect(boundingRect, overridePrimary ? primaryOverrideColor : primaryColor);
-    painter->setPen(overrideSecondary ? secondaryOverrideColor : secondaryColor);
-    painter->drawEllipse(boundingRect);
 }
 
 void LaserPainter::onPrimaryColorUpdated(bool override, QColor newColor)
