@@ -27,6 +27,8 @@ public:
     explicit LaserPainter(QObject *parent = 0);
     LaserPainter(QColor primary, QColor secondary, QObject* parent = 0);
 
+    virtual bool initialize();
+
     virtual void paint(QPainter* painter, QRectF boundingRect);
 
 signals:
@@ -34,6 +36,8 @@ signals:
 public slots:
     void onPrimaryColorUpdated(bool override, QColor newColor);
     void onSecondaryColorUpdated(bool override, QColor newColor);
+    void onBpmChanged(qreal newValue);
+    void onTick(double runningTime, double deltaTime);
 
 protected:
     QColor primaryColor;
@@ -42,4 +46,7 @@ protected:
     QColor secondaryOverrideColor;
     bool overridePrimary;
     bool overrideSecondary;
+    qreal bpm;
+    qreal runningTime;
+    qreal deltaTime;
 };

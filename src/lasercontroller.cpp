@@ -30,6 +30,7 @@ LaserController::LaserController(QObject *parent) :
     deltaTime(0.0),
     shutterState(false),
     nextShutterToggleTime(-1.0),
+    shutterChannelChanged(false),
     rotation(0.0),
     rotationRate(0.0),
     overridePrimaryColor(false),
@@ -119,6 +120,7 @@ void LaserController::onZoomChanged(qreal newValue)
 void LaserController::onStrobeChanged(qreal newValue)
 {
     dmxValues[static_cast<uint32_t>(DmxChannels::STROBE)] = static_cast<uint8_t>(newValue);
+    shutterChannelChanged = true;
 }
 
 void LaserController::onRotationCoarseChanged(qreal newValue)
@@ -158,6 +160,23 @@ void LaserController::onBlueChanged(qreal newValue)
     dmxValues[static_cast<uint32_t>(DmxChannels::BLUE)] = static_cast<uint8_t>(newValue);
 }
 
+void LaserController::onBpmChanged(qreal newValue)
+{
+    dmxValues[static_cast<uint32_t>(DmxChannels::BPM)] = static_cast<uint8_t>(newValue);
+
+    currentPainter->onBpmChanged(newValue);
+}
+
+void LaserController::onFolderChanged(qreal newValue)
+{
+    dmxValues[static_cast<uint32_t>(DmxChannels::FOLDER)] = static_cast<uint8_t>(newValue);
+}
+
+void LaserController::onFileChanged(qreal newValue)
+{
+    dmxValues[static_cast<uint32_t>(DmxChannels::FILE)] = static_cast<uint8_t>(newValue);
+}
+
 void LaserController::onTick()
 {
     double newTime = timeSource.elapsed() / 1000.0;
@@ -167,6 +186,8 @@ void LaserController::onTick()
     updateShutter();
     updateRotation();
     updateColors();
+
+    currentPainter->onTick(runningTime, deltaTime);
 
     laserSurface->update();
 }
@@ -220,6 +241,11 @@ void LaserController::updateShutter()
             shutterState = false;
             nextShutterToggleTime = runningTime + delta;
         }
+
+        if (shutterChannelChanged)
+        {
+            nextShutterToggleTime = runningTime + delta;
+        }
     }
     else if (shutterChannel < 240)
     {
@@ -252,6 +278,11 @@ void LaserController::updateShutter()
             shutterState = false;
             nextShutterToggleTime = runningTime + delta;
         }
+
+        if (shutterChannelChanged)
+        {
+            nextShutterToggleTime = runningTime + delta;
+        }
     }
     else if (shutterChannel >= 240)
     {
@@ -260,6 +291,7 @@ void LaserController::updateShutter()
     }
 
     emit shutterChanged(shutterState);
+    shutterChannelChanged = false;
 }
 
 void LaserController::updateRotation()

@@ -24,7 +24,10 @@ LaserPainter::LaserPainter(QObject *parent) :
     primaryOverrideColor(Colors::Black),
     secondaryOverrideColor(Colors::Black),
     overridePrimary(false),
-    overrideSecondary(false)
+    overrideSecondary(false),
+    bpm(0),
+    runningTime(0.0),
+    deltaTime(0.0)
 {
 }
 
@@ -35,9 +38,17 @@ LaserPainter::LaserPainter(QColor primary, QColor secondary, QObject *parent) :
     primaryOverrideColor(primary),
     secondaryOverrideColor(secondary),
     overridePrimary(false),
-    overrideSecondary(false)
+    overrideSecondary(false),
+    bpm(0),
+    runningTime(0.0),
+    deltaTime(0.0)
 {
 
+}
+
+bool LaserPainter::initialize()
+{
+    return true;
 }
 
 void LaserPainter::paint(QPainter *painter, QRectF boundingRect)
@@ -57,4 +68,15 @@ void LaserPainter::onSecondaryColorUpdated(bool override, QColor newColor)
 {
     overrideSecondary = override;
     secondaryOverrideColor = newColor;
+}
+
+void LaserPainter::onBpmChanged(qreal newValue)
+{
+    bpm = newValue;
+}
+
+void LaserPainter::onTick(double runningTime, double deltaTime)
+{
+    this->runningTime = runningTime;
+    this->deltaTime = deltaTime;
 }

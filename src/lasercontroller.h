@@ -40,6 +40,7 @@ signals:
     void zoomChanged(qreal newValue);
     void shutterChanged(bool newValue);
     void angleChanged(qreal newValue);
+    void bpmChanged(qreal newValue);
 
 public slots:
     void onDimmerChanged(qreal newValue);
@@ -56,6 +57,9 @@ public slots:
     void onRedChanged(qreal newValue);
     void onGreenChanged(qreal newValue);
     void onBlueChanged(qreal newValue);
+    void onBpmChanged(qreal newValue);
+    void onFolderChanged(qreal newValue);
+    void onFileChanged(qreal newValue);
 
 protected slots:
     void onTick();
@@ -82,6 +86,7 @@ protected:
 
     bool shutterState;
     double nextShutterToggleTime;
+    bool shutterChannelChanged;
 
     double rotation;
     double rotationRate;

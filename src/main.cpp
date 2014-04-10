@@ -247,6 +247,44 @@ int main(int argc, char *argv[])
         return -1;
     }
 
+    // Setup BPM
+    fader = mainWindow.rootObject()->findChild<QQuickItem*>("FaderBpm");
+    if (fader)
+    {
+        QObject::connect(fader, SIGNAL(faderMoved(qreal)), &controller, SLOT(onBpmChanged(qreal)));
+        fader->setProperty("faderValue", 128);
+    }
+    else
+    {
+        qCritical() << "Could not find BPM fader";
+        return -1;
+    }
+
+    // Setup file and folder
+    fader = mainWindow.rootObject()->findChild<QQuickItem*>("FaderFolder");
+    if (fader)
+    {
+        QObject::connect(fader, SIGNAL(faderMoved(qreal)), &controller, SLOT(onFolderChanged(qreal)));
+        fader->setProperty("faderValue", 0);
+    }
+    else
+    {
+        qCritical() << "Could not find folder fader";
+        return -1;
+    }
+
+    fader = mainWindow.rootObject()->findChild<QQuickItem*>("FaderFile");
+    if (fader)
+    {
+        QObject::connect(fader, SIGNAL(faderMoved(qreal)), &controller, SLOT(onFileChanged(qreal)));
+        fader->setProperty("faderValue", 0);
+    }
+    else
+    {
+        qCritical() << "Could not find file fader";
+        return -1;
+    }
+
     QObject::connect(&controller, SIGNAL(dimmerChanged(qreal)), &beamerWindow, SLOT(onDimmerChanged(qreal)));
     QObject::connect(&controller, SIGNAL(panChanged(qreal)),    &beamerWindow, SLOT(onPanChanged(qreal)));
     QObject::connect(&controller, SIGNAL(tiltChanged(qreal)),   &beamerWindow, SLOT(onTiltChanged(qreal)));
