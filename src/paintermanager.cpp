@@ -16,14 +16,22 @@
 
 #include "paintermanager.h"
 #include "lasersurface.h"
+#include "colors.h"
 
 #include "painters/blackoutpainter.h"
+#include "painters/standingwave.h"
 
 static const int NUM_PAINTER_FOLDERS = 64;
 static const int NUM_PAINTER_FILES = 32;
 
+static int indexOf(int folder, int file)
+{
+    return folder * NUM_PAINTER_FILES + file;
+}
+
 PainterManager::PainterManager(QObject *parent) :
     QObject(parent),
+    blackoutPainter(nullptr),
     currentPainter(nullptr),
     surface(nullptr),
     currentFile(0),
@@ -48,15 +56,26 @@ bool PainterManager::initialize(LaserSurface* surface)
     }
 
     // Load all painters
-    for (int folder = 0; folder < NUM_PAINTER_FOLDERS; ++folder)
-    {
-        for (int file = 0; file < NUM_PAINTER_FILES; ++file)
-        {
-            painters.push_back(new BlackoutPainter(this));
-        }
-    }
+    painters.resize(NUM_PAINTER_FILES * NUM_PAINTER_FOLDERS, nullptr);
+    blackoutPainter = new BlackoutPainter(this);
+
+    // Wave painters (Folder 4)
+    painters[indexOf(3, 0)] = new StaticStandingWavePainter(Colors::Green,  this);
+    painters[indexOf(3, 1)] = new StaticStandingWavePainter(Colors::Blue,   this);
+    painters[indexOf(3, 2)] = new StaticStandingWavePainter(Colors::Red,    this);
+    painters[indexOf(3, 3)] = new StaticStandingWavePainter(Colors::Cyan,   this);
+    painters[indexOf(3, 4)] = new StaticStandingWavePainter(Colors::Pink,   this);
+    painters[indexOf(3, 5)] = new StaticStandingWavePainter(Colors::Yellow, this);
+
+    painters[indexOf(3,  6)] = new AMStandingWavePainter(Colors::Green,  this);
+    painters[indexOf(3,  7)] = new AMStandingWavePainter(Colors::Blue,   this);
+    painters[indexOf(3,  8)] = new AMStandingWavePainter(Colors::Red,    this);
+    painters[indexOf(3,  9)] = new AMStandingWavePainter(Colors::Cyan,   this);
+    painters[indexOf(3, 10)] = new AMStandingWavePainter(Colors::Pink,   this);
+    painters[indexOf(3, 11)] = new AMStandingWavePainter(Colors::Yellow, this);
 
     currentPainter = painters[0];
+    if (!currentPainter) currentPainter = blackoutPainter;
     this->surface = surface;
     surface->setLaserPainter(currentPainter);
 
@@ -73,6 +92,7 @@ void PainterManager::onChangePainter(int newFolder, int newFile)
         LaserPainter* oldPainter = currentPainter;
 
         currentPainter = painters[currentFolder * NUM_PAINTER_FILES + currentFile];
+        if (!currentPainter) currentPainter = blackoutPainter;
         currentPainter->restart();
         currentPainter->onPrimaryColorUpdated(overridePrimary, primaryOverrideColor);
         currentPainter->onSecondaryColorUpdated(overrideSecondary, secondaryOverrideColor);

@@ -42,6 +42,7 @@ public slots:
 
 protected:
     std::vector<LaserPainter*> painters;
+    LaserPainter* blackoutPainter;
     LaserPainter* currentPainter;
     LaserSurface* surface;
     int currentFile;
