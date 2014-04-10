@@ -12,27 +12,36 @@
 //   See the License for the specific language governing permissions and
 //   limitations under the License.
 
-#include <QPainter>
+#pragma once
 
-#include "colors.h"
 #include "laserpainter.h"
 
-LaserPainter::LaserPainter(QObject *parent) :
-    QObject(parent),
-    primaryColor(Colors::Blue),
-    secondaryColor(Colors::Black)
+class StaticStandingWavePainter : public LaserPainter
 {
-}
+    Q_OBJECT
+public:
+    explicit StaticStandingWavePainter(QObject *parent = 0);
+    StaticStandingWavePainter(QColor color, QObject* parent = 0);
 
-LaserPainter::LaserPainter(QColor primary, QColor secondary, QObject *parent) :
-    QObject(parent),
-    primaryColor(primary),
-    secondaryColor(secondary)
+    virtual void paint(QPainter* painter, QRectF boundingRect);
+
+signals:
+
+public slots:
+
+};
+
+class AMStandingWavePainter : public LaserPainter
 {
+    Q_OBJECT
+public:
+    explicit AMStandingWavePainter(QObject *parent = 0);
+    AMStandingWavePainter(QColor color, QObject* parent = 0);
 
-}
+    virtual void paint(QPainter* painter, QRectF boundingRect);
 
-void LaserPainter::paint(QPainter *painter, QRectF boundingRect)
-{
-    painter->fillRect(boundingRect, primaryColor);
-}
+signals:
+
+public slots:
+
+};

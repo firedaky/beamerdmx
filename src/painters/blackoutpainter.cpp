@@ -12,27 +12,14 @@
 //   See the License for the specific language governing permissions and
 //   limitations under the License.
 
-#pragma once
+#include "blackoutpainter.h"
 
-#include <QColor>
-
-namespace Colors
+BlackoutPainter::BlackoutPainter(QObject *parent) :
+    LaserPainter(parent)
 {
+}
 
-extern QColor Red;
-extern QColor Amber;
-extern QColor Yellow;
-extern QColor LightGreen;
-extern QColor Green;
-extern QColor Cyan;
-extern QColor LightBlue;
-extern QColor Blue;
-extern QColor Magenta;
-extern QColor Pink;
-extern QColor White;
-extern QColor Black;
-
-extern QColor RainbowColors[];
-extern const int RainbowColorCount;
-
+void BlackoutPainter::paint(QPainter *painter, QRectF boundingRect)
+{
+    painter->fillRect(boundingRect, Qt::black);
 }

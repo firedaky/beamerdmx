@@ -14,25 +14,18 @@
 
 #pragma once
 
-#include <QColor>
+#include "laserpainter.h"
 
-namespace Colors
+class BlackoutPainter : public LaserPainter
 {
+    Q_OBJECT
+public:
+    explicit BlackoutPainter(QObject *parent = 0);
 
-extern QColor Red;
-extern QColor Amber;
-extern QColor Yellow;
-extern QColor LightGreen;
-extern QColor Green;
-extern QColor Cyan;
-extern QColor LightBlue;
-extern QColor Blue;
-extern QColor Magenta;
-extern QColor Pink;
-extern QColor White;
-extern QColor Black;
+    virtual void paint(QPainter* painter, QRectF boundingRect);
 
-extern QColor RainbowColors[];
-extern const int RainbowColorCount;
+signals:
 
-}
+public slots:
+
+};

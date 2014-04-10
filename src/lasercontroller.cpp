@@ -18,27 +18,30 @@
 #include "colors.h"
 
 #include "lasersurface.h"
-#include "laserpainter.h"
+#include "paintermanager.h"
 #include "lasercontroller.h"
 
 LaserController::LaserController(QObject *parent) :
     QObject(parent),
     laserSurface(nullptr),
-    blackoutPainter(nullptr),
+    manager(nullptr),
     runningTime(0.0),
     deltaTime(0.0),
+    shutterState(false),
+    nextShutterToggleTime(-1.0),
+    shutterChannelChanged(false),
     rotation(0.0),
-    rotationRate(0.0)
+    rotationRate(0.0),
+    overridePrimaryColor(false),
+    overrideSecondaryColor(false),
+    primaryColor(Colors::Black),
+    secondaryColor(Colors::Black)
 {
     memset(dmxValues, 0, sizeof(dmxValues));
 }
 
 LaserController::~LaserController()
 {
-    if (laserSurface)
-    {
-        laserSurface->setLaserPainter(nullptr);
-    }
 }
 
 bool LaserController::initialize(LaserSurface *surface)
@@ -51,9 +54,12 @@ bool LaserController::initialize(LaserSurface *surface)
 
     laserSurface = surface;
 
-    blackoutPainter = new LaserPainter(this);
-
-    laserSurface->setLaserPainter(blackoutPainter);
+    manager = new PainterManager(this);
+    if (!manager->initialize(laserSurface))
+    {
+        qCritical() << "Painter manager initialization failed";
+        return false;
+    }
 
     timeSource = QTime::currentTime();
 
@@ -111,6 +117,7 @@ void LaserController::onZoomChanged(qreal newValue)
 void LaserController::onStrobeChanged(qreal newValue)
 {
     dmxValues[static_cast<uint32_t>(DmxChannels::STROBE)] = static_cast<uint8_t>(newValue);
+    shutterChannelChanged = true;
 }
 
 void LaserController::onRotationCoarseChanged(qreal newValue)
@@ -123,6 +130,56 @@ void LaserController::onRotationFineChanged(qreal newValue)
     dmxValues[static_cast<uint32_t>(DmxChannels::ROTATION_FINE)] = static_cast<uint8_t>(newValue);
 }
 
+void LaserController::onColor1Changed(qreal newValue)
+{
+    dmxValues[static_cast<uint32_t>(DmxChannels::COLOR1)] = static_cast<uint8_t>(newValue);
+    primaryColorChannelChanged = true;
+}
+
+void LaserController::onColor2Changed(qreal newValue)
+{
+    dmxValues[static_cast<uint32_t>(DmxChannels::COLOR2)] = static_cast<uint8_t>(newValue);
+    secondaryColorChannelChanged = true;
+}
+
+void LaserController::onRedChanged(qreal newValue)
+{
+    dmxValues[static_cast<uint32_t>(DmxChannels::RED)] = static_cast<uint8_t>(newValue);
+}
+
+void LaserController::onGreenChanged(qreal newValue)
+{
+    dmxValues[static_cast<uint32_t>(DmxChannels::GREEN)] = static_cast<uint8_t>(newValue);
+}
+
+void LaserController::onBlueChanged(qreal newValue)
+{
+    dmxValues[static_cast<uint32_t>(DmxChannels::BLUE)] = static_cast<uint8_t>(newValue);
+}
+
+void LaserController::onBpmChanged(qreal newValue)
+{
+    dmxValues[static_cast<uint32_t>(DmxChannels::BPM)] = static_cast<uint8_t>(newValue);
+
+    manager->onBpmChanged(newValue);
+}
+
+void LaserController::onFolderChanged(qreal newValue)
+{
+    dmxValues[static_cast<uint32_t>(DmxChannels::FOLDER)] = static_cast<uint8_t>(newValue);
+
+    manager->onChangePainter( dmxValues[static_cast<uint32_t>(DmxChannels::FOLDER)] / 4,
+                             (dmxValues[static_cast<uint32_t>(DmxChannels::FILE)] / 4) & 0x1f);
+}
+
+void LaserController::onFileChanged(qreal newValue)
+{
+    dmxValues[static_cast<uint32_t>(DmxChannels::FILE)] = static_cast<uint8_t>(newValue);
+
+    manager->onChangePainter( dmxValues[static_cast<uint32_t>(DmxChannels::FOLDER)] / 4,
+                             (dmxValues[static_cast<uint32_t>(DmxChannels::FILE)] / 4) & 0x1f);
+}
+
 void LaserController::onTick()
 {
     double newTime = timeSource.elapsed() / 1000.0;
@@ -131,6 +188,11 @@ void LaserController::onTick()
 
     updateShutter();
     updateRotation();
+    updateColors();
+
+    manager->onTick(runningTime, deltaTime);
+
+    laserSurface->update();
 }
 
 void LaserController::updatePan()
@@ -182,6 +244,11 @@ void LaserController::updateShutter()
             shutterState = false;
             nextShutterToggleTime = runningTime + delta;
         }
+
+        if (shutterChannelChanged)
+        {
+            nextShutterToggleTime = runningTime + delta;
+        }
     }
     else if (shutterChannel < 240)
     {
@@ -214,6 +281,11 @@ void LaserController::updateShutter()
             shutterState = false;
             nextShutterToggleTime = runningTime + delta;
         }
+
+        if (shutterChannelChanged)
+        {
+            nextShutterToggleTime = runningTime + delta;
+        }
     }
     else if (shutterChannel >= 240)
     {
@@ -222,6 +294,7 @@ void LaserController::updateShutter()
     }
 
     emit shutterChanged(shutterState);
+    shutterChannelChanged = false;
 }
 
 void LaserController::updateRotation()
@@ -271,4 +344,168 @@ void LaserController::updateRotation()
     rotation = angle;
 
     emit angleChanged(rotation);
+}
+
+void LaserController::updateColors()
+{
+
+    updateColorsHelper(dmxValues[static_cast<uint32_t>(DmxChannels::COLOR1)],
+            overridePrimaryColor,
+            primaryColor,
+            primaryRainbowIndex,
+            nextPrimaryRainbowTime,
+            primaryColorChannelChanged);
+    manager->onPrimaryColorUpdated(overridePrimaryColor, primaryColor);
+    primaryColorChannelChanged = false;
+
+    updateColorsHelper(dmxValues[static_cast<uint32_t>(DmxChannels::COLOR2)],
+            overrideSecondaryColor,
+            secondaryColor,
+            secondaryRainbowIndex,
+            nextSecondaryRainbowTime,
+            secondaryColorChannelChanged);
+    manager->onSecondaryColorUpdated(overrideSecondaryColor, secondaryColor);
+    secondaryColorChannelChanged = false;
+}
+
+void LaserController::updateColorsHelper(uint8_t channelValue, bool &override, QColor &color, int &rainbowIndex, double &nextRainbowTime, bool channelChanged)
+{
+    if (channelValue < 8)
+    {
+        override = false;
+        color = Colors::Black;
+        rainbowIndex = 0;
+        nextRainbowTime = -1;
+    }
+    else
+    {
+        override = true;
+
+        if (channelValue < 16)
+        {
+            color = QColor(dmxValues[static_cast<uint32_t>(DmxChannels::RED)],
+                           dmxValues[static_cast<uint32_t>(DmxChannels::GREEN)],
+                           dmxValues[static_cast<uint32_t>(DmxChannels::BLUE)]);
+            rainbowIndex = 0;
+            nextRainbowTime = -1;
+        }
+        else if (channelValue < 24)
+        {
+            color = Colors::Red;
+            rainbowIndex = 0;
+            nextRainbowTime = -1;
+        }
+        else if (channelValue < 32)
+        {
+            color = Colors::Amber;
+            rainbowIndex = 1;
+            nextRainbowTime = -1;
+        }
+        else if (channelValue < 40)
+        {
+            color = Colors::Yellow;
+            rainbowIndex = 2;
+            nextRainbowTime = -1;
+        }
+        else if (channelValue < 48)
+        {
+            color = Colors::LightGreen;
+            rainbowIndex = 3;
+            nextRainbowTime = -1;
+        }
+        else if (channelValue < 56)
+        {
+            color = Colors::Green;
+            rainbowIndex = 4;
+            nextRainbowTime = -1;
+        }
+        else if (channelValue < 64)
+        {
+            color = Colors::Cyan;
+            rainbowIndex = 5;
+            nextRainbowTime = -1;
+        }
+        else if (channelValue < 72)
+        {
+            color = Colors::LightBlue;
+            rainbowIndex = 6;
+            nextRainbowTime = -1;
+        }
+        else if (channelValue < 80)
+        {
+            color = Colors::Blue;
+            rainbowIndex = 7;
+            nextRainbowTime = -1;
+        }
+        else if (channelValue < 96)
+        {
+            color = Colors::Magenta;
+            rainbowIndex = 8;
+            nextRainbowTime = -1;
+        }
+        else if (channelValue < 96)
+        {
+            color = Colors::Pink;
+            rainbowIndex = 9;
+            nextRainbowTime = -1;
+        }
+        else if (channelValue < 128)
+        {
+            color = Colors::White;
+            rainbowIndex = 10;
+            nextRainbowTime = -1;
+        }
+        else if (channelValue < 192)
+        {
+            double rate = ((channelValue - 128.0) / (191 - 128)) * -1.0;
+            double delta = 1.0 / (1.0 + rate);
+            delta /= 20.0;
+
+            if (nextRainbowTime > 0)
+            {
+                if (nextRainbowTime <= runningTime)
+                {
+                    if (++rainbowIndex >= Colors::RainbowColorCount) rainbowIndex = 0;
+                    nextRainbowTime += delta;
+                }
+            }
+            else
+            {
+                nextRainbowTime = runningTime + delta;
+            }
+
+            if (channelChanged)
+            {
+                nextRainbowTime = runningTime + delta;
+            }
+
+            color = Colors::RainbowColors[rainbowIndex];
+        }
+        else
+        {
+            double rate = ((channelValue - 192.0) / (255 - 192));
+            double delta = 1.0 / rate;
+            delta /= 20.0;
+
+            if (nextRainbowTime > 0)
+            {
+                if (nextRainbowTime <= runningTime)
+                {
+                    if (--rainbowIndex < 0) rainbowIndex = Colors::RainbowColorCount - 1;
+                    nextRainbowTime += delta;
+                }
+            }
+            else
+            {
+                nextRainbowTime = runningTime + delta;
+            }
+
+            if (channelChanged)
+            {
+                nextRainbowTime = runningTime + delta;
+            }
+
+            color = Colors::RainbowColors[rainbowIndex];
+        }
+    }
 }

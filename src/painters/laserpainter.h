@@ -14,9 +14,19 @@
 
 #pragma once
 
+#define _USE_MATH_DEFINES
+#include <math.h>
+
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+
 #include <QObject>
 #include <QRectF>
 #include <QColor>
+#include <QPainter>
+
+static const float DEFAULT_LINE_THICKNESS = 7;
 
 class QPainter;
 
@@ -27,14 +37,28 @@ public:
     explicit LaserPainter(QObject *parent = 0);
     LaserPainter(QColor primary, QColor secondary, QObject* parent = 0);
 
-    virtual void paint(QPainter* painter, QRectF boundingRect);
+    virtual bool initialize();
+    virtual void restart();
+    virtual void stop();
+
+    virtual void paint(QPainter* painter, QRectF boundingRect) = 0;
 
 signals:
 
 public slots:
+    void onPrimaryColorUpdated(bool override, QColor newColor);
+    void onSecondaryColorUpdated(bool override, QColor newColor);
+    void onBpmChanged(qreal newValue);
+    void onTick(double runningTime, double deltaTime);
 
 protected:
     QColor primaryColor;
     QColor secondaryColor;
-
+    QColor primaryOverrideColor;
+    QColor secondaryOverrideColor;
+    bool overridePrimary;
+    bool overrideSecondary;
+    qreal bpm;
+    qreal runningTime;
+    qreal deltaTime;
 };
