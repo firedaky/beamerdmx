@@ -104,7 +104,7 @@ enum class DmxChannels: uint32_t
  *       28 -  31 Folder  8 (Strobe)
  *       32 -  35 Folder  9 (Characters 1)
  *       36 -  39 Folder 10 (Characters 2)
- *       40 -  43 Folder 11 (Reserved)
+ *       40 -  43 Folder 11 (Explosions)
  *      ...
  *      128 - 131 Folder 32 (User 1)
  *      132 - 135 Folder 33 (User 2)

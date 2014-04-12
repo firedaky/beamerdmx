@@ -60,19 +60,19 @@ bool PainterManager::initialize(LaserSurface* surface)
     blackoutPainter = new BlackoutPainter(this);
 
     // Wave painters (Folder 4)
-    painters[indexOf(3, 0)] = new StaticStandingWavePainter(Colors::Green,  this);
-    painters[indexOf(3, 1)] = new StaticStandingWavePainter(Colors::Blue,   this);
-    painters[indexOf(3, 2)] = new StaticStandingWavePainter(Colors::Red,    this);
-    painters[indexOf(3, 3)] = new StaticStandingWavePainter(Colors::Cyan,   this);
-    painters[indexOf(3, 4)] = new StaticStandingWavePainter(Colors::Pink,   this);
-    painters[indexOf(3, 5)] = new StaticStandingWavePainter(Colors::Yellow, this);
+    painters[indexOf(3, 0)] = new StaticStandingWavePainter(Colors::Red,     this);
+    painters[indexOf(3, 1)] = new StaticStandingWavePainter(Colors::Green,   this);
+    painters[indexOf(3, 2)] = new StaticStandingWavePainter(Colors::Blue,    this);
+    painters[indexOf(3, 3)] = new StaticStandingWavePainter(Colors::Cyan,    this);
+    painters[indexOf(3, 4)] = new StaticStandingWavePainter(Colors::Magenta, this);
+    painters[indexOf(3, 5)] = new StaticStandingWavePainter(Colors::Yellow,  this);
 
-    painters[indexOf(3,  6)] = new AMStandingWavePainter(Colors::Green,  this);
-    painters[indexOf(3,  7)] = new AMStandingWavePainter(Colors::Blue,   this);
-    painters[indexOf(3,  8)] = new AMStandingWavePainter(Colors::Red,    this);
-    painters[indexOf(3,  9)] = new AMStandingWavePainter(Colors::Cyan,   this);
-    painters[indexOf(3, 10)] = new AMStandingWavePainter(Colors::Pink,   this);
-    painters[indexOf(3, 11)] = new AMStandingWavePainter(Colors::Yellow, this);
+    painters[indexOf(3,  6)] = new AMStandingWavePainter(Colors::Red,     this);
+    painters[indexOf(3,  7)] = new AMStandingWavePainter(Colors::Green,   this);
+    painters[indexOf(3,  8)] = new AMStandingWavePainter(Colors::Blue,    this);
+    painters[indexOf(3,  9)] = new AMStandingWavePainter(Colors::Cyan,    this);
+    painters[indexOf(3, 10)] = new AMStandingWavePainter(Colors::Magenta, this);
+    painters[indexOf(3, 11)] = new AMStandingWavePainter(Colors::Yellow,  this);
 
     currentPainter = painters[0];
     if (!currentPainter) currentPainter = blackoutPainter;
