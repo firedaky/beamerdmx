@@ -74,6 +74,18 @@ bool PainterManager::initialize(LaserSurface* surface)
     painters[indexOf(3, 10)] = new AMStandingWavePainter(Colors::Magenta, this);
     painters[indexOf(3, 11)] = new AMStandingWavePainter(Colors::Yellow,  this);
 
+    // Initialize all painters
+    for (size_t i = 0; i < painters.size(); ++i)
+    {
+        if (!painters[i]) continue;
+
+        if (!painters[i]->initialize())
+        {
+            delete painters[i];
+            painters[i] = blackoutPainter;
+        }
+    }
+
     currentPainter = painters[0];
     if (!currentPainter) currentPainter = blackoutPainter;
     this->surface = surface;
