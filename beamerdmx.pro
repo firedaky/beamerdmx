@@ -24,7 +24,8 @@ SOURCES += src/main.cpp \
     src/beamerwindow.cpp \
     src/painters/blackoutpainter.cpp \
     src/paintermanager.cpp \
-    src/painters/standingwave.cpp
+    src/painters/standingwave.cpp \
+    src/painters/randomstars.cpp
 
 HEADERS  += \
     src/lasersurface.h \
@@ -35,7 +36,8 @@ HEADERS  += \
     src/beamerwindow.h \
     src/painters/blackoutpainter.h \
     src/paintermanager.h \
-    src/painters/standingwave.h
+    src/painters/standingwave.h \
+    src/painters/randomstars.h
 
 FORMS    +=
 

@@ -20,6 +20,7 @@
 
 #include "painters/blackoutpainter.h"
 #include "painters/standingwave.h"
+#include "painters/randomstars.h"
 
 static const int NUM_PAINTER_FOLDERS = 64;
 static const int NUM_PAINTER_FILES = 32;
@@ -73,6 +74,9 @@ bool PainterManager::initialize(LaserSurface* surface)
     painters[indexOf(3,  9)] = new AMStandingWavePainter(Colors::Cyan,    this);
     painters[indexOf(3, 10)] = new AMStandingWavePainter(Colors::Magenta, this);
     painters[indexOf(3, 11)] = new AMStandingWavePainter(Colors::Yellow,  this);
+
+    // Starfield painters (Folder 5)
+    painters[indexOf(4,  0)] = new RandomStarsPainter(this);
 
     // Initialize all painters
     for (size_t i = 0; i < painters.size(); ++i)
